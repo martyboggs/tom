@@ -1,0 +1,107 @@
+<html>
+
+
+<style>
+button {
+	margin-bottom: 40px;
+}
+.left {
+	width: 30%;
+	float: left;
+}
+.right {
+	width: 70%;
+	float: left;
+}
+.gui {
+	max-width: 1110px;
+	margin: 30px auto 30px;
+}
+.result {
+	display: block;
+	margin-top: 30px;
+	width: 100%;
+	max-width: 1136px;
+	height: 520px;
+}
+.create-form {
+	display: flex;
+	flex-direction: column;
+	width: 200px;
+}
+</style>
+<body>
+	<div class="gui">
+		<div class="left">
+			<h2>GUI</h2>
+			<button class="read">Read</button><br>
+			<label>ID</label><br>
+			<input type="text" class="update-id"><br>
+			<label>Product Name</label><br>
+			<input type="text" class="update-name"><br>
+			<button class="update">Update</button>
+
+			<div class="create-form">
+				<form>
+					<label>Product ID</label>
+					<input class="product_ID" type="text" required>
+					<label>Product Name</label>
+					<input class="product_name" type="text" required>
+					<label>Product Description</label>
+					<input class="product_descript" type="text" required>
+					<label>Product Price</label>
+					<input class="product_price" type="text" required>
+					<label>Vendor ID</label>
+					<input class="vendor_ID" type="text" value="1001" readonly>
+					<button class="create">Create</button>
+				</form>
+			</div>
+
+			<label>Delete ID</label><br>
+			<input class="delete-id" type="text"><br>
+			<button class="delete">Delete</button>
+		</div>
+
+		<div class="right">
+			<textarea readonly class="result"></textarea>
+		</div>
+	</div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script>
+$('form').submit(function (e) {
+	e.preventDefault();
+
+	$.get('/query', {
+		action: 'create',
+		id: $('.product_ID').val(),
+		name: $('.product_name').val(),
+		description: $('.product_descript').val(),
+		price: $('.product_price').val(),
+		vendor: $('.vendor_ID').val()
+	}, function (res) {
+		$('.result').val(JSON.stringify(res, null, 4));
+	});
+});
+
+$('.read').click(function () {
+	$.get('/query', {action: 'read'}, function (res) {
+		$('.result').val(JSON.stringify(res, null, 4));
+	});
+});
+
+$('.update').click(function () {
+	$.get('/query', {action: 'update', id: $('.update-id').val(), name: $('.update-name').val()}, function (res) {
+		$('.result').val(JSON.stringify(res, null, 4));
+	});
+});
+
+$('.delete').click(function () {
+	$.get('/query', {action: 'delete', id: $('.delete-id').val()}, function (res) {
+		$('.result').val(JSON.stringify(res, null, 4));
+	});
+});
+</script>
+
+</html>
